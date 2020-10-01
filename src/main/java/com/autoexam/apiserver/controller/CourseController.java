@@ -21,6 +21,16 @@ public class CourseController {
     service.save(course);
   }
 
+  @PutMapping("/teachers/{teacher_id}/courses/{course_id}")
+  public void updateCourse(
+    @PathVariable("teacher_id") Long teacherId,
+    @PathVariable("course_id") Long courseId,
+    @Valid @RequestBody Course course) {
+    course.setTeacherId(teacherId);
+    course.setId(courseId);
+    service.update(course);
+  }
+
   @GetMapping("/teachers/{teacher_id}/courses")
   public List<Course> getCourses(@PathVariable("teacher_id") Long teacherId) {
     return service.getAll(teacherId);

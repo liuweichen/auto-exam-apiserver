@@ -21,6 +21,16 @@ public class TeacherController {
     service.save(teacher);
   }
 
+  @PutMapping("/admins/{admin_id}/teachers/{teacher_id}")
+  public void updateTeacher(
+    @PathVariable("admin_id") Long adminId,
+    @PathVariable("teacher_id") Long teacherId,
+    @Valid @RequestBody Teacher teacher) {
+    teacher.setAdminId(adminId);
+    teacher.setId(teacherId);
+    service.update(teacher);
+  }
+
   @GetMapping("/admins/{admin_id}/teachers")
   public List<Teacher> getTeachers(@PathVariable("admin_id") Long adminId) {
     return service.getAll(adminId);

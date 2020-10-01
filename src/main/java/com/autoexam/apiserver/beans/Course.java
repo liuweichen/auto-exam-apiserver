@@ -1,5 +1,6 @@
 package com.autoexam.apiserver.beans;
 
+import com.autoexam.apiserver.beans.base.AuditInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Entity
 @Table(name = "course")
-public class Course {
+public class Course extends AuditInfo {
   @Id
   @GeneratedValue(generator = "course_generator")
   @SequenceGenerator(

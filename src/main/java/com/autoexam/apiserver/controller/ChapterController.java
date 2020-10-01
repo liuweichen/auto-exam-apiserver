@@ -22,6 +22,17 @@ public class ChapterController {
     service.save(chapter);
   }
 
+  @PutMapping("/teachers/{teacher_id}/courses/{course_id}/chapters/{chapter_id}")
+  public void updateChapter(
+    @PathVariable("teacher_id") Long teacherId,
+    @PathVariable("course_id") Long courseId,
+    @PathVariable("chapter_id") Long chapterId,
+    @Valid @RequestBody Chapter course) {
+    course.setCourseId(courseId);
+    course.setId(chapterId);
+    service.update(course);
+  }
+
   @GetMapping("/teachers/{teacher_id}/courses/{course_id}/chapters")
   public List<Chapter> getChapters(
     @PathVariable("teacher_id") Long teacherId,

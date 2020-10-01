@@ -1,5 +1,7 @@
 package com.autoexam.apiserver.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.autoexam.apiserver.beans.Question;
 import com.autoexam.apiserver.dao.QuestionDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,15 @@ public class QuestionService {
 
   public void save(Question question) {
     dao.save(question);
+  }
+
+  public void update(Question question) {
+    Question origin = dao.getOne(question.getId());
+    BeanUtil.copyProperties(
+      question,
+      origin,
+      CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true).ignoreCase());
+    dao.save(origin);
   }
 
   public void deleteById(Long id) {

@@ -24,7 +24,18 @@ public class QuestionController {
     service.save(question);
   }
 
-  @PostMapping("/teachers/{teacher_id}/chapters/{chapter_id}/questions/{question_id}")
+  @PutMapping("/teachers/{teacher_id}/chapters/{chapter_id}/questions/{question_id}")
+  public void updateQuestion(
+    @PathVariable("teacher_id") Long teacherId,
+    @PathVariable("chapter_id") Long chapterId,
+    @PathVariable("question_id") Long questionId,
+    @Valid @RequestBody Question course) {
+    course.setChapterId(chapterId);
+    course.setId(questionId);
+    service.update(course);
+  }
+
+  @DeleteMapping("/teachers/{teacher_id}/chapters/{chapter_id}/questions/{question_id}")
   public void deleteQuestion(
     @PathVariable("teacher_id") Long teacherId,
     @PathVariable("chapter_id") Long chapterId,
@@ -32,7 +43,7 @@ public class QuestionController {
     service.deleteById(questionId);
   }
 
-  @GetMapping("/chapters/{chapter_id}/questions")
+  @GetMapping("/teachers/{teacher_id}/chapters/{chapter_id}/questions")
   public Page<Question> getQuestions(
     @PathVariable("chapter_id") Long chapterId,
     @RequestParam(value = "current_page", required = false, defaultValue = "1") Integer currentPage,
