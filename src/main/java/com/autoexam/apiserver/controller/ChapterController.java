@@ -1,6 +1,7 @@
 package com.autoexam.apiserver.controller;
 
 import com.autoexam.apiserver.beans.Chapter;
+import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
 import com.autoexam.apiserver.service.ChapterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-public class ChapterController {
+public class ChapterController extends ExceptionHandlerController {
   @Autowired
   private ChapterService service;
 

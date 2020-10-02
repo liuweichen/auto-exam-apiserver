@@ -1,6 +1,7 @@
 package com.autoexam.apiserver.controller;
 
 import com.autoexam.apiserver.beans.*;
+import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
 import com.autoexam.apiserver.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class StudentController {
+public class StudentController extends ExceptionHandlerController {
   @Autowired
   private TeacherService teacherService;
   @Autowired

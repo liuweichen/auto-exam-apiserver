@@ -3,6 +3,7 @@ package com.autoexam.apiserver.controller;
 import com.autoexam.apiserver.beans.Admin;
 import com.autoexam.apiserver.beans.Student;
 import com.autoexam.apiserver.beans.Teacher;
+import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
 import com.autoexam.apiserver.model.response.Token;
 import com.autoexam.apiserver.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-public class AuthenticationController {
+public class AuthenticationController extends ExceptionHandlerController {
   @Autowired
   private AuthenticationService service;
 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -28,7 +29,7 @@ public class Answer extends AuditInfo {
   @Column(name = "content", columnDefinition = "text not null")
   private String content;
 
-  @NotBlank(message = "isSelected can not be null")
+  @NotNull(message = "isSelected can not be null")
   @Column(name = "is_selected", columnDefinition = "boolean not null")
   private Boolean isSelected;
 

@@ -1,6 +1,7 @@
 package com.autoexam.apiserver.controller;
 
 import com.autoexam.apiserver.beans.Question;
+import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
 import com.autoexam.apiserver.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-public class QuestionController {
+public class QuestionController extends ExceptionHandlerController {
   @Autowired
   private QuestionService service;
 

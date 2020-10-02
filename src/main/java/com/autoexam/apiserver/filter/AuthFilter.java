@@ -1,5 +1,6 @@
 package com.autoexam.apiserver.filter;
 
+import com.autoexam.apiserver.exception.AuthenticationException;
 import com.autoexam.apiserver.model.AuthenticationInfo;
 import com.autoexam.apiserver.service.common.JwtTokenService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +31,15 @@ public class AuthFilter implements Filter {
         } else {
           long userId = Long.valueOf(urlParts[2]);
           String token = req.getHeader("token");
-          AuthenticationInfo auth = jwtTokenService.verifyToken(token);
-          if (userId == auth.getUserId()) {
-            chain.doFilter(request, response);
-          } else {
-            request.getRequestDispatcher("/authExceptionHandler").forward(request, response);
+          try {
+            AuthenticationInfo auth = jwtTokenService.verifyToken(token);
+            if (userId == auth.getUserId()) {
+              chain.doFilter(request, response);
+            } else {
+              request.getRequestDispatcher("/authExceptionHandler?error_msg=用户ID和token不一致").forward(request, response);
+            }
+          } catch (AuthenticationException e) {
+            request.getRequestDispatcher("/authExceptionHandler?error_msg=" + e.getMessage()).forward(request, response);
           }
         }
       } else {

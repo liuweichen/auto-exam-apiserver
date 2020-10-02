@@ -25,12 +25,12 @@ public class Teacher extends AuditInfo {
   @Column(name = "id", columnDefinition = "bigserial")
   private Long id;
 
-  @NotBlank
+  @NotBlank(message = "name can not be null")
   @Size(min = 3, max = 128, message = "name length should be between 3 and 128")
   @Column(name = "name", columnDefinition = "text not null unique")
   private String name;
 
-  @NotBlank
+  @NotBlank(message = "password can not be null")
   @Size(min = 3, max = 128, message = "password length should be between 3 and 128")
   @Column(name = "password", columnDefinition = "text not null")
   private String password;
