@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TeacherDao extends JpaRepository<Teacher, Long> {
@@ -19,4 +20,7 @@ public interface TeacherDao extends JpaRepository<Teacher, Long> {
   @Transactional(rollbackFor = Exception.class)
   @Query("delete from Teacher t where t.id = :id and t.adminId = :adminId")
   void deleteByIdAndAdminId(@Param("id") Long id, @Param("adminId") Long adminId);
+
+  @Query("select t from Teacher t where t.name = :name")
+  Optional<Teacher> getOneByName(@Param("name") String name);
 }

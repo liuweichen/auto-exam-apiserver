@@ -24,11 +24,12 @@ public class Answer extends AuditInfo {
   @Column(name = "id", columnDefinition = "bigserial")
   private Long id;
 
-  @NotBlank
-  @Column(name = "content", columnDefinition = "text")
+  @NotBlank(message = "content can not be null")
+  @Column(name = "content", columnDefinition = "text not null")
   private String content;
 
-  @Column(name = "is_selected", columnDefinition = "boolean")
+  @NotBlank(message = "isSelected can not be null")
+  @Column(name = "is_selected", columnDefinition = "boolean not null")
   private Boolean isSelected;
 
   @Column(name = "question_id", columnDefinition = "bigint not null references question(id)")

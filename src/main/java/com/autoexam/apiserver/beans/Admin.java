@@ -27,8 +27,13 @@ public class Admin extends AuditInfo {
 
   @NotBlank
   @Size(min = 3, max = 128, message = "name length should be between 3 and 128")
-  @Column(name = "name", columnDefinition = "text not null")
+  @Column(name = "name", columnDefinition = "text not null unique")
   private String name;
+
+  @NotBlank
+  @Size(min = 3, max = 128, message = "password length should be between 3 and 128")
+  @Column(name = "password", columnDefinition = "text not null")
+  private String password;
 
   @Column(name = "description", columnDefinition = "text")
   private String description;
