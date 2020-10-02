@@ -49,22 +49,24 @@ public class JwtTokenService {
     }
   }
 
-  public AuthenticationInfo verifyToken(String token) throws ParseException, JOSEException {
-    RSAKey rsaKey = getSystemRSAKey();
-    //从token中解析JWS对象
-    JWSObject jwsObject = JWSObject.parse(token);
-    RSAKey publicRsaKey = rsaKey.toPublicJWK();
-    //使用RSA公钥创建RSA验证器
-    JWSVerifier jwsVerifier = new RSASSAVerifier(publicRsaKey);
-    if (!jwsObject.verify(jwsVerifier)) {
-      throw new AuthenticationException("token签名不合法！");
+  public AuthenticationInfo verifyToken(String token) {
+    try {
+      RSAKey rsaKey = getSystemRSAKey();
+      //从token中解析JWS对象
+      JWSObject jwsObject = JWSObject.parse(token);
+      JWSVerifier jwsVerifier = new RSASSAVerifier(rsaKey);
+      if (!jwsObject.verify(jwsVerifier)) {
+        throw new AuthenticationException("token签名不合法！");
+      }
+      String payload = jwsObject.getPayload().toString();
+      AuthenticationInfo payloadDto = JSONUtil.toBean(payload, AuthenticationInfo.class);
+      if (payloadDto.getExp() < new Date().getTime()) {
+        throw new AuthenticationException("token已过期！");
+      }
+      return payloadDto;
+    } catch (ParseException | JOSEException e) {
+      throw new RuntimeException("Internal error", e);
     }
-    String payload = jwsObject.getPayload().toString();
-    AuthenticationInfo payloadDto = JSONUtil.toBean(payload, AuthenticationInfo.class);
-    if (payloadDto.getExp() < new Date().getTime()) {
-      throw new AuthenticationException("token已过期！");
-    }
-    return payloadDto;
   }
 
   private RSAKey getSystemRSAKey() {

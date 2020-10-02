@@ -19,4 +19,6 @@ public class AuthenticationInfo {
   private String jti;
   @ApiModelProperty("用户名称")
   private String userName;
+  @ApiModelProperty("用户ID")
+  private Long userId;
 }
