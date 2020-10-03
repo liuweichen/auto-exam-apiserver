@@ -1,4 +1,4 @@
-package com.autoexam.apiserver.model;
+package com.autoexam.apiserver.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ErrorJson {
-  private String errorMsg;
+public class IDJson {
+  private Long id;
 }

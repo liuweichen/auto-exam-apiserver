@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.autoexam.apiserver.beans.Question;
 import com.autoexam.apiserver.dao.QuestionDao;
+import com.autoexam.apiserver.model.response.IDJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +15,8 @@ public class QuestionService {
   @Autowired
   private QuestionDao dao;
 
-  public void save(Question question) {
-    dao.save(question);
+  public IDJson save(Question question) {
+    return new IDJson(dao.save(question).getId());
   }
 
   public void update(Question question) {

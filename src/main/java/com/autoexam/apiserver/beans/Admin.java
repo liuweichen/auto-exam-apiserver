@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
@@ -30,7 +31,7 @@ public class Admin extends AuditInfo {
   @Column(name = "name", columnDefinition = "text not null unique")
   private String name;
 
-  @NotBlank
+  @NotNull
   @Size(min = 3, max = 128, message = "password length should be between 3 and 128")
   @Column(name = "password", columnDefinition = "text not null")
   private String password;

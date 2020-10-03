@@ -1,7 +1,9 @@
 package com.autoexam.apiserver.controller;
 
+import com.autoexam.apiserver.annotation.log.TraceLog;
 import com.autoexam.apiserver.beans.Course;
 import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
+import com.autoexam.apiserver.model.response.IDJson;
 import com.autoexam.apiserver.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +16,16 @@ public class CourseController extends ExceptionHandlerController {
   @Autowired
   private CourseService service;
 
+  @TraceLog(clazz = "CourseController", method = "createCourse")
   @PostMapping("/teachers/{teacher_id}/courses")
-  public void createCourse(
+  public IDJson createCourse(
     @PathVariable("teacher_id") Long teacherId,
     @Valid @RequestBody Course course) {
     course.setTeacherId(teacherId);
-    service.save(course);
+    return service.save(course);
   }
 
+  @TraceLog(clazz = "CourseController", method = "updateCourse")
   @PutMapping("/teachers/{teacher_id}/courses/{course_id}")
   public void updateCourse(
     @PathVariable("teacher_id") Long teacherId,
@@ -37,6 +41,7 @@ public class CourseController extends ExceptionHandlerController {
     return service.getAll(teacherId);
   }
 
+  @TraceLog(clazz = "CourseController", method = "deleteCourse")
   @DeleteMapping("/teachers/{teacher_id}/courses/{course_id}")
   public void deleteCourse(
     @PathVariable("teacher_id") Long teacherId,

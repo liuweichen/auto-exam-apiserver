@@ -1,7 +1,9 @@
 package com.autoexam.apiserver.controller;
 
+import com.autoexam.apiserver.annotation.log.TraceLog;
 import com.autoexam.apiserver.beans.Question;
 import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
+import com.autoexam.apiserver.model.response.IDJson;
 import com.autoexam.apiserver.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,15 +18,17 @@ public class QuestionController extends ExceptionHandlerController {
   @Autowired
   private QuestionService service;
 
+  @TraceLog(clazz = "QuestionController", method = "createQuestion")
   @PostMapping("/teachers/{teacher_id}/chapters/{chapter_id}/questions")
-  public void createQuestion(
+  public IDJson createQuestion(
     @PathVariable("teacher_id") Long teacherId,
     @PathVariable("chapter_id") Long chapterId,
     @Valid @RequestBody Question question) {
     question.setChapterId(chapterId);
-    service.save(question);
+    return service.save(question);
   }
 
+  @TraceLog(clazz = "QuestionController", method = "updateQuestion")
   @PutMapping("/teachers/{teacher_id}/chapters/{chapter_id}/questions/{question_id}")
   public void updateQuestion(
     @PathVariable("teacher_id") Long teacherId,
@@ -36,6 +40,7 @@ public class QuestionController extends ExceptionHandlerController {
     service.update(course);
   }
 
+  @TraceLog(clazz = "QuestionController", method = "deleteQuestion")
   @DeleteMapping("/teachers/{teacher_id}/chapters/{chapter_id}/questions/{question_id}")
   public void deleteQuestion(
     @PathVariable("teacher_id") Long teacherId,

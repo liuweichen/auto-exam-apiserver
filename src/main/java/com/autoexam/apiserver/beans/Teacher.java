@@ -1,6 +1,8 @@
 package com.autoexam.apiserver.beans;
 
+import com.autoexam.apiserver.annotation.file.PostNotNull;
 import com.autoexam.apiserver.beans.base.AuditInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,10 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties(
+  value = {"password"},
+  allowSetters = true
+)
 @Table(name = "teacher")
 public class Teacher extends AuditInfo {
   @Id
@@ -30,7 +36,7 @@ public class Teacher extends AuditInfo {
   @Column(name = "name", columnDefinition = "text not null unique")
   private String name;
 
-  @NotBlank(message = "password can not be null")
+  @PostNotNull(message = "password can not be null")
   @Size(min = 3, max = 128, message = "password length should be between 3 and 128")
   @Column(name = "password", columnDefinition = "text not null")
   private String password;

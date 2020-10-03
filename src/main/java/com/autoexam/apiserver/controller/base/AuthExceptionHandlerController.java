@@ -1,6 +1,6 @@
 package com.autoexam.apiserver.controller.base;
 
-import com.autoexam.apiserver.model.ErrorJson;
+import com.autoexam.apiserver.model.response.ErrorJson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;

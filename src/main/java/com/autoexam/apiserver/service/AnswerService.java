@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.autoexam.apiserver.beans.Answer;
 import com.autoexam.apiserver.dao.AnswerDao;
+import com.autoexam.apiserver.model.response.IDJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,8 @@ public class AnswerService {
   @Autowired
   private AnswerDao dao;
 
-  public void save(Answer answer) {
-    dao.save(answer);
+  public IDJson save(Answer answer) {
+    return new IDJson(dao.save(answer).getId());
   }
 
   public void update(Answer chapter) {

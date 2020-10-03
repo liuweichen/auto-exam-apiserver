@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -24,7 +25,7 @@ public class Question extends AuditInfo {
   @Column(name = "id", columnDefinition = "bigserial")
   private Long id;
 
-  @NotBlank
+  @NotNull
   @Column(name = "type", columnDefinition = "int not null")
   private Integer type;
 

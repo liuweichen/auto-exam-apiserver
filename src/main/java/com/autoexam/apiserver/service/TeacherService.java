@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.autoexam.apiserver.beans.Teacher;
 import com.autoexam.apiserver.dao.TeacherDao;
+import com.autoexam.apiserver.model.response.IDJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,8 @@ public class TeacherService {
   @Autowired
   private TeacherDao dao;
 
-  public void save(Teacher teacher) {
-    dao.save(teacher);
+  public IDJson save(Teacher teacher) {
+    return new IDJson(dao.save(teacher).getId());
   }
 
   public void update(Teacher teacher) {

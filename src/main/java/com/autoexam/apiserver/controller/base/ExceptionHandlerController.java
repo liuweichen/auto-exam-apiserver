@@ -1,7 +1,7 @@
 package com.autoexam.apiserver.controller.base;
 
 import com.autoexam.apiserver.exception.AuthenticationException;
-import com.autoexam.apiserver.model.ErrorJson;
+import com.autoexam.apiserver.model.response.ErrorJson;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
