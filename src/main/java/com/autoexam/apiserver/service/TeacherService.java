@@ -6,7 +6,9 @@ import com.autoexam.apiserver.beans.Teacher;
 import com.autoexam.apiserver.dao.TeacherDao;
 import com.autoexam.apiserver.model.response.IDJson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -14,8 +16,11 @@ import java.util.List;
 public class TeacherService {
   @Autowired
   private TeacherDao dao;
+  @Autowired
+  private BCryptPasswordEncoder encoder;
 
   public IDJson save(Teacher teacher) {
+    teacher.setPassword(encoder.encode(teacher.getPassword()));
     return new IDJson(dao.save(teacher).getId());
   }
 
@@ -25,6 +30,9 @@ public class TeacherService {
       teacher,
       origin,
       CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true).ignoreCase());
+    if (!StringUtils.isEmpty(origin.getPassword())) {
+      origin.setPassword(encoder.encode(origin.getPassword()));
+    }
     dao.save(origin);
   }
 

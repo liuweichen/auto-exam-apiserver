@@ -13,6 +13,7 @@ import com.autoexam.apiserver.model.response.Token;
 import com.autoexam.apiserver.service.common.JwtTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -29,10 +30,12 @@ public class AuthenticationService {
   private StudentDao studentDao;
   @Autowired
   private JwtTokenService jwtTokenService;
+  @Autowired
+  private BCryptPasswordEncoder encoder;
 
   public Token adminLogin(Admin admin) {
     Admin t = adminDao.getOneByName(admin.getName()).orElseThrow(() -> new AuthenticationException("用户不存在"));
-    if (!t.getPassword().equals(admin.getPassword())) {
+    if (!encoder.matches(admin.getPassword(), t.getPassword())) {
       log.info("password error for admin: {}", admin.getName());
       throw new AuthenticationException("密码错误");
     } else {
@@ -42,7 +45,7 @@ public class AuthenticationService {
 
   public Token teacherLogin(Teacher teacher) {
     Teacher t = teacherDao.getOneByName(teacher.getName()).orElseThrow(() -> new AuthenticationException("用户不存在"));
-    if (!t.getPassword().equals(teacher.getPassword())) {
+    if (!encoder.matches(teacher.getPassword(), t.getPassword())) {
       log.info("password error for teacher: {}", teacher.getName());
       throw new AuthenticationException("密码错误");
     } else {
@@ -52,7 +55,7 @@ public class AuthenticationService {
 
   public Token studentLogin(Student student) {
     Student t = studentDao.getOneByName(student.getName()).orElseThrow(() -> new AuthenticationException("用户不存在"));
-    if (!t.getPassword().equals(student.getPassword())) {
+    if (!encoder.matches(student.getPassword(), t.getPassword())) {
       log.info("password error for student: {}", student.getName());
       throw new AuthenticationException("密码错误");
     } else {
