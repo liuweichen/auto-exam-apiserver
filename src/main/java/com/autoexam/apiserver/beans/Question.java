@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -40,4 +41,8 @@ public class Question extends AuditInfo {
   @PostNotNull
   @Column(name = "chapter_id", columnDefinition = "bigint not null references chapter(id)")
   private Long chapterId;
+
+  @Transient
+  @PostNotNull
+  private List<Answer> answerList;
 }
