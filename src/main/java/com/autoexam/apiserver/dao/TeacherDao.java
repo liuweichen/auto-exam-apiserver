@@ -23,4 +23,7 @@ public interface TeacherDao extends JpaRepository<Teacher, Long> {
 
   @Query("select t from Teacher t where t.name = :name")
   Optional<Teacher> getOneByName(@Param("name") String name);
+
+  @Query("select t from Teacher t where t.adminId = :adminId and t.id = :id")
+  Optional<Teacher> getByAdminIdAndTeacherId(@Param("adminId") Long adminId, @Param("id") Long id);
 }

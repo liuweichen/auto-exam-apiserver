@@ -5,6 +5,7 @@ import com.autoexam.apiserver.beans.Teacher;
 import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
 import com.autoexam.apiserver.model.response.IDJson;
 import com.autoexam.apiserver.service.TeacherService;
+import com.autoexam.apiserver.service.privilege.AdminPrivilegeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,8 @@ import java.util.List;
 public class TeacherController extends ExceptionHandlerController {
   @Autowired
   private TeacherService service;
+  @Autowired
+  private AdminPrivilegeService privilegeService;
 
   @TraceLog(clazz = "TeacherController", method = "createTeacher")
   @PostMapping("/admins/{admin_id}/teachers")
@@ -31,6 +34,7 @@ public class TeacherController extends ExceptionHandlerController {
     @PathVariable("admin_id") Long adminId,
     @PathVariable("teacher_id") Long teacherId,
     @Valid @RequestBody Teacher teacher) {
+    privilegeService.checkAdminHasTeacher(adminId, teacherId);
     teacher.setAdminId(adminId);
     teacher.setId(teacherId);
     service.update(teacher);
@@ -46,6 +50,7 @@ public class TeacherController extends ExceptionHandlerController {
   public void deleteTeacher(
     @PathVariable("admin_id") Long adminId,
     @PathVariable("teacher_id") Long teacherId) {
+    privilegeService.checkAdminHasTeacher(adminId, teacherId);
     service.deleteById(teacherId);
   }
 }

@@ -1,5 +1,6 @@
 package com.autoexam.apiserver.beans;
 
+import com.autoexam.apiserver.annotation.file.PostNotNull;
 import com.autoexam.apiserver.beans.base.AuditInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +37,7 @@ public class Question extends AuditInfo {
   @Column(name = "explanation", columnDefinition = "text")
   private String explanation;
 
+  @PostNotNull
   @Column(name = "chapter_id", columnDefinition = "bigint not null references chapter(id)")
   private Long chapterId;
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CourseDao extends JpaRepository<Course, Long> {
@@ -19,4 +20,13 @@ public interface CourseDao extends JpaRepository<Course, Long> {
   @Transactional(rollbackFor = Exception.class)
   @Query("delete from Course c where c.id = :id and c.teacherId = :teacherId")
   void deleteByIdAndTeacherId(@Param("id") Long id, @Param("teacherId") Long teacherId);
+
+  @Query("select t from Course t where t.teacherId = :teacherId and t.id = :id")
+  Optional<Course> getByTeacherIdAndCourseId(@Param("teacherId") Long teacherId, @Param("id") Long id);
+
+  @Query("select ch.id from Course co join Chapter ch on co.id = ch.courseId where co.teacherId = :teacherId and ch.id = :id")
+  Optional<Long> getByTeacherIdAndChapterId(@Param("teacherId") Long teacherId, @Param("id") Long id);
+
+  @Query("select qu.id from Course co join Chapter ch on co.id = ch.courseId join Question qu on ch.id = qu.chapterId where co.teacherId = :teacherId and qu.id = :id")
+  Optional<Long> getByTeacherIdAndQuestionId(@Param("teacherId") Long teacherId, @Param("id") Long id);
 }
