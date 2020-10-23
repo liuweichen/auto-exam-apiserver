@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,9 @@ public class AuthFilter implements Filter {
         } else {
           long userId = Long.valueOf(urlParts[2]);
           String token = req.getHeader("token");
+          if (StringUtils.isEmpty(token)) {
+            request.getRequestDispatcher("/authExceptionHandler?error_msg=token为空").forward(request, response);
+          }
           try {
             AuthenticationInfo auth = jwtTokenService.verifyToken(token);
             if (userId == auth.getUserId()) {

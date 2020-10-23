@@ -13,6 +13,7 @@ import com.autoexam.apiserver.model.response.Token;
 import com.autoexam.apiserver.service.common.JwtTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,8 @@ public class AuthenticationService {
   private JwtTokenService jwtTokenService;
   @Autowired
   private BCryptPasswordEncoder encoder;
+  @Value("${token.valid.time:3600}")
+  private Integer tokenValidTime;
 
   public Token adminLogin(Admin admin) {
     Admin t = adminDao.getOneByName(admin.getName()).orElseThrow(() -> new AuthenticationException("用户不存在"));
@@ -39,7 +42,7 @@ public class AuthenticationService {
       log.info("password error for admin: {}", admin.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return new Token(jwtTokenService.generateToken(getAuth(t.getName(), t.getId())));
+      return getToken(t.getName(), t.getId());
     }
   }
 
@@ -49,7 +52,7 @@ public class AuthenticationService {
       log.info("password error for teacher: {}", teacher.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return new Token(jwtTokenService.generateToken(getAuth(t.getName(), t.getId())));
+      return getToken(t.getName(), t.getId());
     }
   }
 
@@ -59,19 +62,19 @@ public class AuthenticationService {
       log.info("password error for student: {}", student.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return new Token(jwtTokenService.generateToken(getAuth(t.getName(), t.getId())));
+      return getToken(t.getName(), t.getId());
     }
   }
 
-  private AuthenticationInfo getAuth(String name, long id) {
+  private Token getToken(String name, long id) {
     AuthenticationInfo auth = new AuthenticationInfo();
     Date now = new Date();
-    Date exp = DateUtil.offsetSecond(now, 60 * 60);
+    Date exp = DateUtil.offsetSecond(now, tokenValidTime);
     auth.setIat(now.getTime());
     auth.setExp(exp.getTime());
     auth.setJti(UUID.randomUUID().toString());
     auth.setUserName(name);
     auth.setUserId(id);
-    return auth;
+    return new Token(jwtTokenService.generateToken(auth), exp.getTime());
   }
 }
