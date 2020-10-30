@@ -37,4 +37,10 @@ public class AuthenticationController extends ExceptionHandlerController {
     @Valid @RequestBody Student student) {
     return service.studentLogin(student);
   }
+
+  @TraceLog(clazz = "AuthenticationController", method = "refreshToken")
+  @PostMapping("/token/refresh")
+  public Token refreshToken(@RequestHeader(name = "token") String token) {
+    return service.refreshToken(token);
+  }
 }

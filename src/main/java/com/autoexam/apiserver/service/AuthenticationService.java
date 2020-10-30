@@ -33,8 +33,10 @@ public class AuthenticationService {
   private JwtTokenService jwtTokenService;
   @Autowired
   private BCryptPasswordEncoder encoder;
-  @Value("${token.valid.time:3600}")
-  private Integer tokenValidTime;
+  @Value("${token.valid.hours:1}")
+  private Integer tokenValidHour;
+  @Value("${token.fresh.tolerate.second:10}")
+  private Integer tolerateSecond;
 
   public Token adminLogin(Admin admin) {
     Admin t = adminDao.getOneByName(admin.getName()).orElseThrow(() -> new AuthenticationException("用户不存在"));
@@ -42,7 +44,7 @@ public class AuthenticationService {
       log.info("password error for admin: {}", admin.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId());
+      return getToken(t.getName(), t.getId(), "admin");
     }
   }
 
@@ -52,7 +54,7 @@ public class AuthenticationService {
       log.info("password error for teacher: {}", teacher.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId());
+      return getToken(t.getName(), t.getId(), "teacher");
     }
   }
 
@@ -62,17 +64,23 @@ public class AuthenticationService {
       log.info("password error for student: {}", student.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId());
+      return getToken(t.getName(), t.getId(), "student");
     }
   }
 
-  private Token getToken(String name, long id) {
+  public Token refreshToken(String token) {
+    AuthenticationInfo auth = jwtTokenService.verifyToken(token, tolerateSecond);
+    return getToken(auth.getUserName(), auth.getUserId(), auth.getRole());
+  }
+
+  private Token getToken(String name, long id, String role) {
     AuthenticationInfo auth = new AuthenticationInfo();
     Date now = new Date();
-    Date exp = DateUtil.offsetSecond(now, tokenValidTime);
+    Date exp = DateUtil.offsetHour(now, tokenValidHour);
     auth.setIat(now.getTime());
     auth.setExp(exp.getTime());
     auth.setJti(UUID.randomUUID().toString());
+    auth.setRole(role);
     auth.setUserName(name);
     auth.setUserId(id);
     return new Token(jwtTokenService.generateToken(auth), exp.getTime());

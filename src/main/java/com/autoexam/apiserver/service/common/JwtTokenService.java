@@ -1,5 +1,6 @@
 package com.autoexam.apiserver.service.common;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.autoexam.apiserver.exception.AuthenticationException;
 import com.autoexam.apiserver.model.AuthenticationInfo;
@@ -49,7 +50,7 @@ public class JwtTokenService {
     }
   }
 
-  public AuthenticationInfo verifyToken(String token) {
+  public AuthenticationInfo verifyToken(String token, int tolerateSecond) {
     try {
       RSAKey rsaKey = getSystemRSAKey();
       //从token中解析JWS对象
@@ -60,7 +61,7 @@ public class JwtTokenService {
       }
       String payload = jwsObject.getPayload().toString();
       AuthenticationInfo payloadDto = JSONUtil.toBean(payload, AuthenticationInfo.class);
-      if (payloadDto.getExp() < new Date().getTime()) {
+      if (payloadDto.getExp() < DateUtil.offsetSecond(new Date(), tolerateSecond).getTime()) {
         throw new AuthenticationException("token已过期！");
       }
       return payloadDto;

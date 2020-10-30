@@ -17,6 +17,8 @@ public class AuthenticationInfo {
   private Long exp;
   @ApiModelProperty("JWT的ID")
   private String jti;
+  @ApiModelProperty("用户角色")
+  private String role;
   @ApiModelProperty("用户名称")
   private String userName;
   @ApiModelProperty("用户ID")
