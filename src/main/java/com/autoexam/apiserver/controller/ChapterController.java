@@ -46,8 +46,9 @@ public class ChapterController extends ExceptionHandlerController {
   @GetMapping("/teachers/{teacher_id}/chapters")
   public List<Chapter> getChapters(
     @PathVariable("teacher_id") Long teacherId,
-    @RequestParam("course_id") Long courseId) {
-    return service.getAll(courseId);
+    @RequestParam(value = "course_id", required = false) Long courseId,
+    @RequestParam(value = "chapter_id", required = false) Long chapterId) {
+    return service.getAll(teacherId, courseId, chapterId);
   }
 
   @TraceLog(clazz = "ChapterController", method = "deleteChapter")

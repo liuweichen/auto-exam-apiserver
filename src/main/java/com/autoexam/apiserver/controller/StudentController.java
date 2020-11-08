@@ -35,7 +35,7 @@ public class StudentController extends ExceptionHandlerController {
   @GetMapping("/students/{student_id}/chapters")
   public List<Chapter> getChapters(
     @RequestParam("course_id") Long courseId) {
-    return chapterService.getAll(courseId);
+    return chapterService.getAll(null, courseId, null);
   }
 
   @GetMapping("/students/{student_id}/questions")
@@ -45,6 +45,6 @@ public class StudentController extends ExceptionHandlerController {
     @RequestParam(value = "page_size", required = false, defaultValue = "20") Integer pageSize
   ) {
     Pageable page = PageRequest.of(currentPage - 1, pageSize);
-    return questionService.getQuestionPage(chapterId, page);
+    return questionService.getQuestionPage(null, null, chapterId, null, page);
   }
 }

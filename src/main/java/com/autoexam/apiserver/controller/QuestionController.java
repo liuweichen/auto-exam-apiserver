@@ -56,11 +56,14 @@ public class QuestionController extends ExceptionHandlerController {
 
   @GetMapping("/teachers/{teacher_id}/questions")
   public Page<Question> getQuestions(
-    @RequestParam(value = "chapter_id") Long chapterId,
+    @PathVariable("teacher_id") Long teacherId,
+    @RequestParam(value = "course_id", required = false) Long courseId,
+    @RequestParam(value = "chapter_id", required = false) Long chapterId,
+    @RequestParam(value = "question_id", required = false) Long questionId,
     @RequestParam(value = "current_page", required = false, defaultValue = "1") Integer currentPage,
     @RequestParam(value = "page_size", required = false, defaultValue = "20") Integer pageSize
   ) {
     Pageable page = PageRequest.of(currentPage - 1, pageSize);
-    return service.getQuestionPage(chapterId, page);
+    return service.getQuestionPage(teacherId, courseId, chapterId,  questionId, page);
   }
 }

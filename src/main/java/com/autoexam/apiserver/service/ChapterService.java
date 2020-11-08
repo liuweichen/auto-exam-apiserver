@@ -5,7 +5,6 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import com.autoexam.apiserver.beans.Chapter;
 import com.autoexam.apiserver.dao.ChapterDao;
 import com.autoexam.apiserver.model.response.IDJson;
-import com.sun.xml.bind.v2.model.core.ID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +28,8 @@ public class ChapterService {
     dao.save(origin);
   }
 
-  public List<Chapter> getAll(Long courseId) {
-    return dao.getAllByCourseId(courseId);
+  public List<Chapter> getAll(Long teacherId, Long courseId, Long chapterId) {
+    return dao.getWithFilter(teacherId, courseId, chapterId);
   }
 
   public void deleteById(Long id) {

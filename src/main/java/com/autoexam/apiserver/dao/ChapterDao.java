@@ -13,8 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface ChapterDao extends JpaRepository<Chapter, Long> {
-  @Query("select c from Chapter c where c.courseId = :courseId")
-  List<Chapter> getAllByCourseId(@Param("courseId") Long courseId);
+  @Query("select ch from Chapter as ch join Course as co on ch.courseId = co.id where " +
+    "(co.teacherId = :teacherId or :teacherId is null) and (ch.courseId = :courseId or :courseId is null) " +
+    "and (ch.id = :chapterId or :chapterId is null)")
+  List<Chapter> getWithFilter(
+    @Param("teacherId") Long teacherId,
+    @Param("courseId") Long courseId,
+    @Param("chapterId") Long chapterId);
 
   @Modifying
   @Transactional(rollbackFor = Exception.class)
