@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,10 +61,14 @@ public class QuestionController extends ExceptionHandlerController {
     @RequestParam(value = "course_id", required = false) Long courseId,
     @RequestParam(value = "chapter_id", required = false) Long chapterId,
     @RequestParam(value = "question_id", required = false) Long questionId,
+    @RequestParam(value = "type", required = false) Integer type,
     @RequestParam(value = "current_page", required = false, defaultValue = "1") Integer currentPage,
-    @RequestParam(value = "page_size", required = false, defaultValue = "20") Integer pageSize
+    @RequestParam(value = "page_size", required = false, defaultValue = "20") Integer pageSize,
+    @RequestParam(value = "sort_field", required = false, defaultValue = "createdAt") String sortField,
+    @RequestParam(value = "sort_order", required = false, defaultValue = "desc") String sortOrder
   ) {
-    Pageable page = PageRequest.of(currentPage - 1, pageSize);
-    return service.getQuestionPage(teacherId, courseId, chapterId,  questionId, page);
+    Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
+    Pageable page = PageRequest.of(currentPage - 1, pageSize, sort);
+    return service.getQuestionPage(teacherId, courseId, chapterId,  questionId, type, page);
   }
 }

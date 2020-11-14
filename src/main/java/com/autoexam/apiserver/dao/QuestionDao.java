@@ -14,12 +14,14 @@ import java.util.Optional;
 public interface QuestionDao extends JpaRepository<Question, Long> {
   @Query("select q from Question as q join Chapter as ch on q.chapterId = ch.id join Course as co on ch.courseId = co.id " +
     " where (co.teacherId = :teacherId or :teacherId is null) and (co.id = :courseId or :courseId is null) " +
-    " and (ch.id = :chapterId or :chapterId is null) and (q.id = :questionId or :questionId is null)")
+    " and (ch.id = :chapterId or :chapterId is null) and (q.id = :questionId or :questionId is null) " +
+    " and (q.type = :type or :type is null)")
   Page<Question> getPageWithFilter(
     @Param("teacherId") Long teacherId,
     @Param("courseId") Long courseId,
     @Param("chapterId") Long chapterId,
     @Param("questionId") Long questionId,
+    @Param("type") Integer type,
     Pageable page);
 
   @Query("select t from Question t where t.chapterId = :chapterId and t.id = :id")

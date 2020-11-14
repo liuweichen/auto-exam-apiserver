@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,9 +43,12 @@ public class StudentController extends ExceptionHandlerController {
   public Page<Question> getQuestions(
     @RequestParam("chapter_id") Long chapterId,
     @RequestParam(value = "current_page", required = false, defaultValue = "1") Integer currentPage,
-    @RequestParam(value = "page_size", required = false, defaultValue = "20") Integer pageSize
+    @RequestParam(value = "page_size", required = false, defaultValue = "20") Integer pageSize,
+    @RequestParam(value = "sort_field", required = false, defaultValue = "updated_at") String sortField,
+    @RequestParam(value = "sort_order", required = false, defaultValue = "desc") String sortOrder
   ) {
-    Pageable page = PageRequest.of(currentPage - 1, pageSize);
-    return questionService.getQuestionPage(null, null, chapterId, null, page);
+    Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
+    Pageable page = PageRequest.of(currentPage - 1, pageSize, sort);
+    return questionService.getQuestionPage(null, null, chapterId, null, null, page);
   }
 }

@@ -48,8 +48,14 @@ public class QuestionService {
     questionDao.deleteById(id);
   }
 
-  public Page<Question> getQuestionPage(Long teacherId, Long courseId, Long chapterId, Long questionId, Pageable page) {
-    Page<Question> res = questionDao.getPageWithFilter(teacherId, courseId, chapterId, questionId, page);
+  public Page<Question> getQuestionPage(
+    Long teacherId,
+    Long courseId,
+    Long chapterId,
+    Long questionId,
+    Integer type,
+    Pageable page) {
+    Page<Question> res = questionDao.getPageWithFilter(teacherId, courseId, chapterId, questionId, type, page);
     List<Answer> answers = answerDao.getAllByQuestionIds(res.get().map(q -> q.getId()).collect(Collectors.toList()));
     Map<Long, List<Answer>> answerMap = answers.stream().collect(Collectors.groupingBy(Answer::getQuestionId));
     res.forEach(a -> a.setAnswerList(answerMap.get(a.getId())));
