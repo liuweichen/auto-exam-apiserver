@@ -28,8 +28,8 @@ public class CourseService {
     dao.save(origin);
   }
 
-  public List<Course> getAll(Long teacherId) {
-    return dao.getAllByTeacherId(teacherId);
+  public List<Course> getAll(Long teacherId, Long courseId) {
+    return dao.getAllByTeacherId(teacherId, courseId);
   }
 
   public void deleteById(Long id) {

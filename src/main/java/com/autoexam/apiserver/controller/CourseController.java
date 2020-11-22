@@ -42,7 +42,7 @@ public class CourseController extends ExceptionHandlerController {
 
   @GetMapping("/teachers/{teacher_id}/courses")
   public List<Course> getCourses(@PathVariable("teacher_id") Long teacherId) {
-    return service.getAll(teacherId);
+    return service.getAll(teacherId, null);
   }
 
   @TraceLog(clazz = "CourseController", method = "deleteCourse")

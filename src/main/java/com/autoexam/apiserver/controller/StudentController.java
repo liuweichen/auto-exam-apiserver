@@ -29,19 +29,29 @@ public class StudentController extends ExceptionHandlerController {
   }
 
   @GetMapping("/students/{student_id}/courses")
-  public List<Course> getCourses(@RequestParam("teacher_id") Long teacherId) {
-    return courseService.getAll(teacherId);
+  public List<Course> getCourses(
+    @RequestParam(value = "teacher_id", required = false) Long teacherId,
+    @RequestParam(value = "course_id", required = false) Long courseId
+  ) {
+    return courseService.getAll(teacherId, courseId);
   }
 
   @GetMapping("/students/{student_id}/chapters")
   public List<Chapter> getChapters(
-    @RequestParam("course_id") Long courseId) {
-    return chapterService.getAll(null, courseId, null);
+    @RequestParam(value = "teacher_id", required = false) Long teacherId,
+    @RequestParam(value = "course_id", required = false) Long courseId,
+    @RequestParam(value = "chapter_id", required = false) Long chapterId
+  ) {
+    return chapterService.getAll(teacherId, courseId, chapterId);
   }
 
   @GetMapping("/students/{student_id}/questions")
   public Page<Question> getQuestions(
-    @RequestParam("chapter_id") Long chapterId,
+    @RequestParam(value = "teacher_id", required = false) Long teacherId,
+    @RequestParam(value = "course_id", required = false) Long courseId,
+    @RequestParam(value = "chapter_id", required = false) Long chapterId,
+    @RequestParam(value = "question_id", required = false) Long questionId,
+    @RequestParam(value = "type", required = false) Integer type,
     @RequestParam(value = "current_page", required = false, defaultValue = "1") Integer currentPage,
     @RequestParam(value = "page_size", required = false, defaultValue = "20") Integer pageSize,
     @RequestParam(value = "sort_field", required = false, defaultValue = "updated_at") String sortField,
@@ -49,6 +59,6 @@ public class StudentController extends ExceptionHandlerController {
   ) {
     Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
     Pageable page = PageRequest.of(currentPage - 1, pageSize, sort);
-    return questionService.getQuestionPage(null, null, chapterId, null, null, page);
+    return questionService.getQuestionPage(teacherId, courseId, chapterId, questionId, type, page);
   }
 }

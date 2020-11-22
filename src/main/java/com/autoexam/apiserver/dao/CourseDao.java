@@ -13,8 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface CourseDao extends JpaRepository<Course, Long> {
-  @Query("select c from Course c where c.teacherId = :teacherId")
-  List<Course> getAllByTeacherId(@Param("teacherId") Long teacherId);
+  @Query("select c from Course c where (c.teacherId = :teacherId or :teacherId is null) and (c.id = :id or :id is null)")
+  List<Course> getAllByTeacherId(@Param("teacherId") Long teacherId, @Param("id") Long id);
 
   @Modifying
   @Transactional(rollbackFor = Exception.class)
