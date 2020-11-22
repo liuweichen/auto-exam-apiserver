@@ -54,7 +54,7 @@ public class StudentController extends ExceptionHandlerController {
     @RequestParam(value = "type", required = false) Integer type,
     @RequestParam(value = "current_page", required = false, defaultValue = "1") Integer currentPage,
     @RequestParam(value = "page_size", required = false, defaultValue = "20") Integer pageSize,
-    @RequestParam(value = "sort_field", required = false, defaultValue = "updated_at") String sortField,
+    @RequestParam(value = "sort_field", required = false, defaultValue = "updatedAt") String sortField,
     @RequestParam(value = "sort_order", required = false, defaultValue = "desc") String sortOrder
   ) {
     Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortField);
