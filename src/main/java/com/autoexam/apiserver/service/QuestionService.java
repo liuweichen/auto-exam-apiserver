@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class QuestionService {
   @Autowired
   private AnswerDao answerDao;
 
+  @Transactional(rollbackFor = Exception.class)
   public IDJson save(Question question) {
     long questionId = questionDao.save(question).getId();
     question.getAnswerList().forEach(a -> a.setQuestionId(questionId));
@@ -30,6 +32,7 @@ public class QuestionService {
     return new IDJson(questionId);
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public void update(Question question) {
     long questionId = question.getId();
     Question origin = questionDao.getOne(questionId);
@@ -43,9 +46,16 @@ public class QuestionService {
     answerDao.saveAll(question.getAnswerList());
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public void deleteById(Long id) {
     answerDao.deleteByQuestionId(id);
     questionDao.deleteById(id);
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public void deleteByIdList(List<Long> idList) {
+    answerDao.deleteByQuestionIdList(idList);
+    questionDao.deleteByQuestionIdList(idList);
   }
 
   public Page<Question> getQuestionPage(

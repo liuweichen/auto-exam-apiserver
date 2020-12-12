@@ -19,4 +19,9 @@ public interface AnswerDao extends JpaRepository<Answer, Long> {
   @Transactional(rollbackFor = Exception.class)
   @Query("delete from Answer a where a.questionId = :questionId")
   void deleteByQuestionId(@Param("questionId") Long questionId);
+
+  @Modifying
+  @Transactional(rollbackFor = Exception.class)
+  @Query("delete from Answer a where a.questionId in :idList")
+  void deleteByQuestionIdList(@Param("idList") List<Long> idList);
 }

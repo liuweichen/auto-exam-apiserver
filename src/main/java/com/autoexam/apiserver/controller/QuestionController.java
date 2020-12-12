@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class QuestionController extends ExceptionHandlerController {
@@ -53,6 +54,15 @@ public class QuestionController extends ExceptionHandlerController {
     @PathVariable("question_id") Long questionId) {
     privilegeService.checkTeacherHasQuestion(teacherId, questionId);
     service.deleteById(questionId);
+  }
+
+  @TraceLog(clazz = "QuestionController", method = "deleteQuestionBash")
+  @PostMapping("/teachers/{teacher_id}/questions/delete")
+  public void deleteQuestionBash(
+    @PathVariable("teacher_id") Long teacherId,
+    @RequestBody List<Long> idList) {
+    privilegeService.checkTeacherHasQuestionList(teacherId, idList);
+    service.deleteByIdList(idList);
   }
 
   @GetMapping("/teachers/{teacher_id}/questions")

@@ -29,4 +29,7 @@ public interface CourseDao extends JpaRepository<Course, Long> {
 
   @Query("select qu.id from Course co join Chapter ch on co.id = ch.courseId join Question qu on ch.id = qu.chapterId where co.teacherId = :teacherId and qu.id = :id")
   Optional<Long> getByTeacherIdAndQuestionId(@Param("teacherId") Long teacherId, @Param("id") Long id);
+
+  @Query("select count(*) from Course co join Chapter ch on co.id = ch.courseId join Question qu on ch.id = qu.chapterId where co.teacherId = :teacherId and qu.id in :idList")
+  Long getByTeacherIdAndQuestionIdList(@Param("teacherId") Long teacherId, @Param("idList") List<Long> idList);
 }
