@@ -51,6 +51,7 @@ public class TeacherController extends ExceptionHandlerController {
     @PathVariable("admin_id") Long adminId,
     @PathVariable("teacher_id") Long teacherId) {
     privilegeService.checkAdminHasTeacher(adminId, teacherId);
+    privilegeService.checkTeacherNotHasCourses(teacherId);
     service.deleteById(teacherId);
   }
 }

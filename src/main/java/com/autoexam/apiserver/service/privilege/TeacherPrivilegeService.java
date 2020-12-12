@@ -1,7 +1,10 @@
 package com.autoexam.apiserver.service.privilege;
 
+import com.autoexam.apiserver.dao.ChapterDao;
 import com.autoexam.apiserver.dao.CourseDao;
-import com.autoexam.apiserver.exception.AuthenticationException;
+import com.autoexam.apiserver.dao.QuestionDao;
+import com.autoexam.apiserver.exception.BadRequestException;
+import com.autoexam.apiserver.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,26 +14,44 @@ import java.util.List;
 public class TeacherPrivilegeService {
   @Autowired
   private CourseDao courseDao;
+  @Autowired
+  private ChapterDao chapterDao;
+  @Autowired
+  private QuestionDao questionDao;
 
   public void checkTeacherHasCourse(Long teacherId, Long courseId) {
     courseDao.getByTeacherIdAndCourseId(teacherId, courseId).orElseThrow(() ->
-      new AuthenticationException(String.format("teacher: %s does not have course: %s", teacherId, courseId)));
+      new ResourceNotFoundException(String.format("teacher: %s does not have course: %s", teacherId, courseId)));
   }
 
   public void checkTeacherHasChapter(Long teacherId, Long chapterId) {
     courseDao.getByTeacherIdAndChapterId(teacherId, chapterId).orElseThrow(() ->
-      new AuthenticationException(String.format("teacher: %s does not have chapter: %s", teacherId, chapterId)));
+      new ResourceNotFoundException(String.format("teacher: %s does not have chapter: %s", teacherId, chapterId)));
   }
 
   public void checkTeacherHasQuestion(Long teacherId, Long questionId) {
     courseDao.getByTeacherIdAndQuestionId(teacherId, questionId).orElseThrow(() ->
-      new AuthenticationException(String.format("teacher: %s does not have question: %s", teacherId, questionId)));
+      new ResourceNotFoundException(String.format("teacher: %s does not have question: %s", teacherId, questionId)));
   }
 
   public void checkTeacherHasQuestionList(Long teacherId, List<Long> idList) {
     if (idList.size() != courseDao.getByTeacherIdAndQuestionIdList(teacherId, idList)) {
-      throw new AuthenticationException(
+      throw new ResourceNotFoundException(
         String.format("teacher: %s does not have question: %s", teacherId, idList.toString()));
+    }
+  }
+
+  public void checkCourseNotHasChapters(Long courseId) {
+    int chapterCount = chapterDao.getCountByCourseId(courseId);
+    if (chapterCount > 0) {
+      throw new BadRequestException(String.format("course: %s have total: %d chapter", courseId, chapterCount));
+    }
+  }
+
+  public void checkChapterNotHasQuestions(Long chapterId) {
+    int questionCount = questionDao.getCountByChapterId(chapterId);
+    if (questionCount > 0) {
+      throw new BadRequestException(String.format("chapter: %s have total: %d questions", chapterId, questionCount));
     }
   }
 }

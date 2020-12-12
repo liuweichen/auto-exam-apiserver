@@ -57,6 +57,7 @@ public class ChapterController extends ExceptionHandlerController {
     @PathVariable("teacher_id") Long teacherId,
     @PathVariable("chapter_id") Long chapterId) {
     privilegeService.checkTeacherHasChapter(teacherId, chapterId);
+    privilegeService.checkChapterNotHasQuestions(chapterId);
     service.deleteById(chapterId);
   }
 }

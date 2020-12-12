@@ -28,4 +28,7 @@ public interface ChapterDao extends JpaRepository<Chapter, Long> {
 
   @Query("select t from Chapter t where t.courseId = :courseId and t.id = :id")
   Optional<Chapter> getByCourseIdAndChapterId(@Param("courseId") Long courseId, @Param("id") Long id);
+
+  @Query("select count(*) from Chapter t where t.courseId = :courseId")
+  Integer getCountByCourseId(@Param("courseId") Long courseId);
 }

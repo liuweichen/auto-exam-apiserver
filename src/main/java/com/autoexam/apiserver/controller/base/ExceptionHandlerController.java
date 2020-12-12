@@ -1,6 +1,8 @@
 package com.autoexam.apiserver.controller.base;
 
 import com.autoexam.apiserver.exception.AuthenticationException;
+import com.autoexam.apiserver.exception.BadRequestException;
+import com.autoexam.apiserver.exception.ResourceNotFoundException;
 import com.autoexam.apiserver.model.response.ErrorJson;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,6 +22,16 @@ public class ExceptionHandlerController {
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity authenticationException(HttpServletRequest request, AuthenticationException exception) {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorJson(exception.getMessage()));
+  }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity resourceNotFoundException(HttpServletRequest request, ResourceNotFoundException exception) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorJson(exception.getMessage()));
+  }
+
+  @ExceptionHandler(BadRequestException.class)
+  public ResponseEntity badRequestException(HttpServletRequest request, BadRequestException exception) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorJson(exception.getMessage()));
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)

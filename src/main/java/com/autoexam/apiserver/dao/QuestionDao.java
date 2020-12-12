@@ -30,6 +30,9 @@ public interface QuestionDao extends JpaRepository<Question, Long> {
   @Query("select t from Question t where t.chapterId = :chapterId and t.id = :id")
   Optional<Question> getByChapterIdAndQuestionId(@Param("chapterId") Long chapterId, @Param("id") Long id);
 
+  @Query("select count(*) from Question t where t.chapterId = :chapterId")
+  Integer getCountByChapterId(@Param("chapterId") Long chapterId);
+
   @Modifying
   @Transactional(rollbackFor = Exception.class)
   @Query("delete from Question a where a.id in :idList")
