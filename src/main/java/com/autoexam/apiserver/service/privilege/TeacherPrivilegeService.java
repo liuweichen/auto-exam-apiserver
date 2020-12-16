@@ -1,9 +1,6 @@
 package com.autoexam.apiserver.service.privilege;
 
-import com.autoexam.apiserver.dao.ChapterDao;
-import com.autoexam.apiserver.dao.CourseDao;
-import com.autoexam.apiserver.dao.ExamDao;
-import com.autoexam.apiserver.dao.QuestionDao;
+import com.autoexam.apiserver.dao.*;
 import com.autoexam.apiserver.exception.BadRequestException;
 import com.autoexam.apiserver.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,8 @@ public class TeacherPrivilegeService {
   private QuestionDao questionDao;
   @Autowired
   private ExamDao examDao;
+  @Autowired
+  private Exam2QuestionDao exam2QuestionDao;
 
   public void checkTeacherHasCourse(Long teacherId, Long courseId) {
     courseDao.getByTeacherIdAndCourseId(teacherId, courseId).orElseThrow(() ->
@@ -63,11 +62,10 @@ public class TeacherPrivilegeService {
     }
   }
 
-  public void checkExamNotHasQuestions(Long chapterId) {
-    // TODO: get question count in exam
-    int questionCount = 0;
+  public void checkExamNotHasQuestions(Long examId) {
+    int questionCount = exam2QuestionDao.getCountByExamId(examId);
     if (questionCount > 0) {
-      throw new BadRequestException(String.format("chapter: %s have total: %d questions", chapterId, questionCount));
+      throw new BadRequestException(String.format("exam: %s have total: %d questions", examId, questionCount));
     }
   }
 }

@@ -2,6 +2,7 @@ package com.autoexam.apiserver.controller;
 
 import com.autoexam.apiserver.annotation.log.TraceLog;
 import com.autoexam.apiserver.beans.Exam;
+import com.autoexam.apiserver.beans.Question;
 import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
 import com.autoexam.apiserver.model.response.IDJson;
 import com.autoexam.apiserver.service.ExamService;
@@ -59,5 +60,34 @@ public class ExamController extends ExceptionHandlerController {
     privilegeService.checkTeacherHasExam(teacherId, examId);
     privilegeService.checkExamNotHasQuestions(examId);
     service.deleteById(examId);
+  }
+
+  @TraceLog(clazz = "ExamController", method = "addQuestion2Exam")
+  @PostMapping("/teachers/{teacher_id}/exams/{exam_id}/add")
+  public void addQuestion2Exam(
+    @PathVariable("teacher_id") Long teacherId,
+    @PathVariable("exam_id") Long examId,
+    @Valid @RequestBody List<Long> questionIdList) {
+    privilegeService.checkTeacherHasExam(teacherId, examId);
+    privilegeService.checkTeacherHasQuestionList(teacherId, questionIdList);
+    service.addQuestion2Exam(examId, questionIdList);
+  }
+
+  @TraceLog(clazz = "ExamController", method = "removeQuestion2Exam")
+  @PostMapping("/teachers/{teacher_id}/exams/{exam_id}/remove")
+  public void removeQuestion2Exam(
+    @PathVariable("teacher_id") Long teacherId,
+    @PathVariable("exam_id") Long examId,
+    @Valid @RequestBody List<Long> questionIdList) {
+    privilegeService.checkTeacherHasExam(teacherId, examId);
+    service.removeQuestion2Exam(examId, questionIdList);
+  }
+
+  @GetMapping("/teachers/{teacher_id}/exams/{exam_id}/get")
+  public List<Question> getExamQuestions(
+    @PathVariable("teacher_id") Long teacherId,
+    @PathVariable("exam_id") Long examId) {
+    privilegeService.checkTeacherHasExam(teacherId, examId);
+    return service.getQuestionsByExamId(examId);
   }
 }
