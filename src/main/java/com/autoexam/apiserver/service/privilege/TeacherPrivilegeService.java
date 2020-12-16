@@ -2,6 +2,7 @@ package com.autoexam.apiserver.service.privilege;
 
 import com.autoexam.apiserver.dao.ChapterDao;
 import com.autoexam.apiserver.dao.CourseDao;
+import com.autoexam.apiserver.dao.ExamDao;
 import com.autoexam.apiserver.dao.QuestionDao;
 import com.autoexam.apiserver.exception.BadRequestException;
 import com.autoexam.apiserver.exception.ResourceNotFoundException;
@@ -18,6 +19,8 @@ public class TeacherPrivilegeService {
   private ChapterDao chapterDao;
   @Autowired
   private QuestionDao questionDao;
+  @Autowired
+  private ExamDao examDao;
 
   public void checkTeacherHasCourse(Long teacherId, Long courseId) {
     courseDao.getByTeacherIdAndCourseId(teacherId, courseId).orElseThrow(() ->
@@ -27,6 +30,11 @@ public class TeacherPrivilegeService {
   public void checkTeacherHasChapter(Long teacherId, Long chapterId) {
     courseDao.getByTeacherIdAndChapterId(teacherId, chapterId).orElseThrow(() ->
       new ResourceNotFoundException(String.format("teacher: %s does not have chapter: %s", teacherId, chapterId)));
+  }
+
+  public void checkTeacherHasExam(Long teacherId, Long examId) {
+    courseDao.getByTeacherIdAndExamId(teacherId, examId).orElseThrow(() ->
+      new ResourceNotFoundException(String.format("teacher: %s does not have exam: %s", teacherId, examId)));
   }
 
   public void checkTeacherHasQuestion(Long teacherId, Long questionId) {
@@ -50,6 +58,14 @@ public class TeacherPrivilegeService {
 
   public void checkChapterNotHasQuestions(Long chapterId) {
     int questionCount = questionDao.getCountByChapterId(chapterId);
+    if (questionCount > 0) {
+      throw new BadRequestException(String.format("chapter: %s have total: %d questions", chapterId, questionCount));
+    }
+  }
+
+  public void checkExamNotHasQuestions(Long chapterId) {
+    // TODO: get question count in exam
+    int questionCount = 0;
     if (questionCount > 0) {
       throw new BadRequestException(String.format("chapter: %s have total: %d questions", chapterId, questionCount));
     }
