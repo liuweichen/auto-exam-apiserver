@@ -22,6 +22,8 @@ public class StudentController extends ExceptionHandlerController {
   private ChapterService chapterService;
   @Autowired
   private QuestionService questionService;
+  @Autowired
+  private ExamService examService;
 
   @GetMapping("/students/{student_id}/teachers")
   public List<Teacher> getTeachers() {
@@ -43,6 +45,22 @@ public class StudentController extends ExceptionHandlerController {
     @RequestParam(value = "chapter_id", required = false) Long chapterId
   ) {
     return chapterService.getAll(teacherId, courseId, chapterId);
+  }
+
+  @GetMapping("/students/{student_id}/exams")
+  public List<Exam> getExams(
+    @RequestParam(value = "teacher_id", required = false) Long teacherId,
+    @RequestParam(value = "course_id", required = false) Long courseId,
+    @RequestParam(value = "exam_id", required = false) Long examId
+  ) {
+    return examService.getAll(teacherId, courseId, examId);
+  }
+
+  @GetMapping("/students/{student_id}/exams/{exam_id}/questions")
+  public List<Question> getExamQuestions(
+    @PathVariable(value = "exam_id", required = false) Long examId
+  ) {
+    return examService.getQuestionsByExamId(examId);
   }
 
   @GetMapping("/students/{student_id}/questions")
