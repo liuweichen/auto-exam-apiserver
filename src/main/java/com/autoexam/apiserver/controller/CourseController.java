@@ -52,6 +52,7 @@ public class CourseController extends ExceptionHandlerController {
     @PathVariable("course_id") Long courseId) {
     privilegeService.checkTeacherHasCourse(teacherId, courseId);
     privilegeService.checkCourseNotHasChapters(courseId);
+    privilegeService.checkCourseNotHasExams(courseId);
     service.deleteById(courseId);
   }
 }

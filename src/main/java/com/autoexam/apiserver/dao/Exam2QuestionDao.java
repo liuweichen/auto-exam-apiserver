@@ -16,6 +16,9 @@ public interface Exam2QuestionDao extends JpaRepository<Exam2Question, Long> {
   @Query("select count(*) from Exam2Question t where t.examId = :examId")
   Integer getCountByExamId(@Param("examId") Long examId);
 
+  @Query("select count(*) from Exam2Question t where t.questionId in :questionIdList")
+  Integer getCountByQuestionIdList(@Param("questionIdList") List<Long> questionIdList);
+
   @Modifying
   @Transactional(rollbackFor = Exception.class)
   @Query("delete from Exam2Question c where c.examId = :examId and c.questionId in :questionIdList")

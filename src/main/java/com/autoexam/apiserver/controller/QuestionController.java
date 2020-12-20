@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -53,6 +54,7 @@ public class QuestionController extends ExceptionHandlerController {
     @PathVariable("teacher_id") Long teacherId,
     @PathVariable("question_id") Long questionId) {
     privilegeService.checkTeacherHasQuestion(teacherId, questionId);
+    privilegeService.checkExamsNotHaveQuestionList(Arrays.asList(questionId));
     service.deleteById(questionId);
   }
 
@@ -62,6 +64,7 @@ public class QuestionController extends ExceptionHandlerController {
     @PathVariable("teacher_id") Long teacherId,
     @RequestBody List<Long> idList) {
     privilegeService.checkTeacherHasQuestionList(teacherId, idList);
+    privilegeService.checkExamsNotHaveQuestionList(idList);
     service.deleteByIdList(idList);
   }
 

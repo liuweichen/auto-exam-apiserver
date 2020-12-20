@@ -48,10 +48,24 @@ public class TeacherPrivilegeService {
     }
   }
 
+  public void checkExamsNotHaveQuestionList(List<Long> idList) {
+    if (exam2QuestionDao.getCountByQuestionIdList(idList) > 0) {
+      throw new BadRequestException(
+        String.format("exams have question: %s", idList.toString()));
+    }
+  }
+
   public void checkCourseNotHasChapters(Long courseId) {
     int chapterCount = chapterDao.getCountByCourseId(courseId);
     if (chapterCount > 0) {
       throw new BadRequestException(String.format("course: %s have total: %d chapter", courseId, chapterCount));
+    }
+  }
+
+  public void checkCourseNotHasExams(Long courseId) {
+    int chapterCount = examDao.getCountByCourseId(courseId);
+    if (chapterCount > 0) {
+      throw new BadRequestException(String.format("course: %s have total: %d exam", courseId, chapterCount));
     }
   }
 
