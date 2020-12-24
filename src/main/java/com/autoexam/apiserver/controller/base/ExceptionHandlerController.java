@@ -5,6 +5,7 @@ import com.autoexam.apiserver.exception.BadRequestException;
 import com.autoexam.apiserver.exception.ResourceNotFoundException;
 import com.autoexam.apiserver.model.response.ErrorJson;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +68,12 @@ public class ExceptionHandlerController {
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   public ResponseEntity httpRequestMethodNotSupportException(HttpServletRequest request, HttpRequestMethodNotSupportedException exception) {
     String errorMsg = exception.getLocalizedMessage();
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorJson(errorMsg));
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity httpRequestMethodDataIntegrityViolationException(HttpServletRequest request, DataIntegrityViolationException exception) {
+    String errorMsg = exception.getCause().getCause().getMessage();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorJson(errorMsg));
   }
 

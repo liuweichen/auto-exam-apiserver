@@ -14,7 +14,12 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "chapter")
+@Table(
+  name = "chapter",
+  uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "course_id"})
+  }
+)
 public class Chapter extends AuditInfo {
   @Id
   @GeneratedValue(generator = "chapter_generator")
@@ -35,6 +40,6 @@ public class Chapter extends AuditInfo {
   private String description;
 
   @PostNotNull
-  @Column(name = "courseId", columnDefinition = "bigint not null references course(id)")
+  @Column(name = "course_id", columnDefinition = "bigint not null references course(id)")
   private Long courseId;
 }

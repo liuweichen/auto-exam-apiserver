@@ -13,7 +13,12 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "course")
+@Table(
+  name = "course",
+  uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "teacher_id"})
+  }
+)
 public class Course extends AuditInfo {
   @Id
   @GeneratedValue(generator = "course_generator")

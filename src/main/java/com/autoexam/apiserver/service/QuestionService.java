@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,6 +37,7 @@ public class QuestionService {
   public void update(Question question) {
     long questionId = question.getId();
     Question origin = questionDao.getOne(questionId);
+    origin.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
     BeanUtil.copyProperties(
       question,
       origin,
