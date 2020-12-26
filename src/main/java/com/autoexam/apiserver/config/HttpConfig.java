@@ -2,12 +2,14 @@ package com.autoexam.apiserver.config;
 
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConditionalOnProperty(name = "server.http.enable", havingValue = "true", matchIfMissing = true)
 public class HttpConfig {
   @Value("${server.http.port:8080}")
   private int httpPort;
