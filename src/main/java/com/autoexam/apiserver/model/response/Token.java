@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Token {
+  public Token(String token) {
+    this.token = token;
+  }
   private String token;
   private Long expired;
 }

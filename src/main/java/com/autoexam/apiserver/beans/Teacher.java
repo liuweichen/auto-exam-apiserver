@@ -46,4 +46,13 @@ public class Teacher extends AuditInfo {
 
   @Column(name = "admin_id", columnDefinition = "bigint not null references admin(id)")
   private Long adminId;
+
+  @Column(name = "ak", columnDefinition = "text")
+  private String ak;
+
+  @Column(name = "sk", columnDefinition = "text")
+  private String sk;
+
+  @Column(name = "bucket", columnDefinition = "text")
+  private String bucket;
 }
