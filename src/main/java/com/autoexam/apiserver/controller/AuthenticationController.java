@@ -49,6 +49,6 @@ public class AuthenticationController extends ExceptionHandlerController {
 
   @GetMapping("/teachers/{teacher_id}/token")
   public Token getToken(@PathVariable("teacher_id") Long teacherId) {
-    return new Token(qiNiuCloudService.getUploadToken(teacherId));
+    return qiNiuCloudService.getUploadToken(teacherId);
   }
 }

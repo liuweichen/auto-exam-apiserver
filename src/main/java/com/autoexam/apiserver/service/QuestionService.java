@@ -44,8 +44,11 @@ public class QuestionService {
       CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true).ignoreCase());
     questionDao.save(origin);
     answerDao.deleteByQuestionId(questionId);
-    question.getAnswerList().forEach(q -> q.setQuestionId(questionId));
-    answerDao.saveAll(question.getAnswerList());
+    List<Answer> answerList = question.getAnswerList();
+    if (answerList != null && !answerList.isEmpty()) {
+      answerList.forEach(q -> q.setQuestionId(questionId));
+      answerDao.saveAll(answerList);
+    }
   }
 
   @Transactional(rollbackFor = Exception.class)
