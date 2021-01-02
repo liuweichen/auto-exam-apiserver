@@ -7,6 +7,7 @@ import com.autoexam.apiserver.beans.Question;
 import com.autoexam.apiserver.dao.AnswerDao;
 import com.autoexam.apiserver.dao.QuestionDao;
 import com.autoexam.apiserver.model.response.IDJson;
+import com.autoexam.apiserver.service.common.QiNiuCloudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,6 +26,8 @@ public class QuestionService {
   private QuestionDao questionDao;
   @Autowired
   private AnswerDao answerDao;
+  @Autowired
+  private QiNiuCloudService qiNiuCloudService;
 
   @Transactional(rollbackFor = Exception.class)
   public IDJson save(Question question) {
@@ -34,10 +38,13 @@ public class QuestionService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void update(Question question) {
+  public void update(Long teacherId, Question question) {
     long questionId = question.getId();
     Question origin = questionDao.getOne(questionId);
     origin.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+    if (!origin.getImageUrl().equals(question.getImageUrl())) {
+      qiNiuCloudService.deleteImageBash(teacherId, Arrays.asList(origin.getId()));
+    }
     BeanUtil.copyProperties(
       question,
       origin,
@@ -52,13 +59,15 @@ public class QuestionService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void deleteById(Long id) {
+  public void deleteById(Long teacherId, Long id) {
+    qiNiuCloudService.deleteImageBash(teacherId, Arrays.asList(id));
     answerDao.deleteByQuestionId(id);
     questionDao.deleteById(id);
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public void deleteByIdList(List<Long> idList) {
+  public void deleteByIdList(Long teacherId, List<Long> idList) {
+    qiNiuCloudService.deleteImageBash(teacherId, idList);
     answerDao.deleteByQuestionIdList(idList);
     questionDao.deleteByQuestionIdList(idList);
   }

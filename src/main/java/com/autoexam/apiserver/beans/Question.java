@@ -35,7 +35,7 @@ public class Question extends AuditInfo {
   @Column(name = "content", columnDefinition = "text not null")
   private String content;
 
-  @Column(name = "image_url", columnDefinition = "text")
+  @Column(name = "image_url", columnDefinition = "text not null default '' ")
   private String imageUrl;
 
   @Column(name = "explanation", columnDefinition = "text")

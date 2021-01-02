@@ -45,7 +45,7 @@ public class QuestionController extends ExceptionHandlerController {
       privilegeService.checkTeacherHasChapter(teacherId, question.getChapterId());
     }
     question.setId(questionId);
-    service.update(question);
+    service.update(teacherId, question);
   }
 
   @TraceLog(clazz = "QuestionController", method = "deleteQuestion")
@@ -55,7 +55,7 @@ public class QuestionController extends ExceptionHandlerController {
     @PathVariable("question_id") Long questionId) {
     privilegeService.checkTeacherHasQuestion(teacherId, questionId);
     privilegeService.checkExamsNotHaveQuestionList(Arrays.asList(questionId));
-    service.deleteById(questionId);
+    service.deleteById(teacherId, questionId);
   }
 
   @TraceLog(clazz = "QuestionController", method = "deleteQuestionBash")
@@ -65,7 +65,7 @@ public class QuestionController extends ExceptionHandlerController {
     @RequestBody List<Long> idList) {
     privilegeService.checkTeacherHasQuestionList(teacherId, idList);
     privilegeService.checkExamsNotHaveQuestionList(idList);
-    service.deleteByIdList(idList);
+    service.deleteByIdList(teacherId, idList);
   }
 
   @GetMapping("/teachers/{teacher_id}/questions")

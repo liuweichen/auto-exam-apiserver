@@ -33,6 +33,9 @@ public interface QuestionDao extends JpaRepository<Question, Long> {
   @Query("select count(*) from Question t where t.chapterId = :chapterId")
   Integer getCountByChapterId(@Param("chapterId") Long chapterId);
 
+  @Query("select 'question' || '-' || t.id || '-' || t.imageUrl from Question t where t.id in :idList and t.imageUrl is not null and CHAR_LENGTH(t.imageUrl) > 0")
+  List<String> getImageUrlByQuestionIdList(@Param("idList") List<Long> idList);
+
   @Modifying
   @Transactional(rollbackFor = Exception.class)
   @Query("delete from Question a where a.id in :idList")

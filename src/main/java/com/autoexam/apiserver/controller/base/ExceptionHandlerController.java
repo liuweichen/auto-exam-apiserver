@@ -4,6 +4,7 @@ import com.autoexam.apiserver.exception.AuthenticationException;
 import com.autoexam.apiserver.exception.BadRequestException;
 import com.autoexam.apiserver.exception.ResourceNotFoundException;
 import com.autoexam.apiserver.model.response.ErrorJson;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.UnexpectedTypeException;
 
+@Slf4j
 @RestControllerAdvice
 public class ExceptionHandlerController {
   @ExceptionHandler(AuthenticationException.class)
@@ -80,6 +82,7 @@ public class ExceptionHandlerController {
   @ExceptionHandler(Exception.class)
   public ResponseEntity exception(HttpServletRequest request, Exception exception) {
     String errorMsg = exception.getLocalizedMessage();
+    log.error("internal error", exception);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorJson(errorMsg));
   }
 }
