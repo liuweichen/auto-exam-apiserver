@@ -38,4 +38,16 @@ public class Admin extends AuditInfo {
 
   @Column(name = "description", columnDefinition = "text")
   private String description;
+
+  @Column(name = "ak", columnDefinition = "text")
+  private String ak;
+
+  @Column(name = "sk", columnDefinition = "text")
+  private String sk;
+
+  @Column(name = "bucket", columnDefinition = "text")
+  private String bucket;
+
+  @Column(name = "host_name", columnDefinition = "text")
+  private String hostName;
 }

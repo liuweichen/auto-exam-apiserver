@@ -44,7 +44,7 @@ public class AuthenticationService {
       log.info("password error for admin: {}", admin.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId(), "admin");
+      return getToken(t.getName(), t.getId(), "admin", t.getHostName());
     }
   }
 
@@ -54,7 +54,7 @@ public class AuthenticationService {
       log.info("password error for teacher: {}", teacher.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId(), "teacher");
+      return getToken(t.getName(), t.getId(), "teacher", adminDao.getOne(t.getAdminId()).getHostName());
     }
   }
 
@@ -64,16 +64,16 @@ public class AuthenticationService {
       log.info("password error for student: {}", student.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId(), "student");
+      return getToken(t.getName(), t.getId(), "student", null);
     }
   }
 
   public Token refreshToken(String token) {
     AuthenticationInfo auth = jwtTokenService.verifyToken(token, tolerateSecond);
-    return getToken(auth.getUserName(), auth.getUserId(), auth.getRole());
+    return getToken(auth.getUserName(), auth.getUserId(), auth.getRole(), auth.getHostName());
   }
 
-  private Token getToken(String name, long id, String role) {
+  private Token getToken(String name, long id, String role, String hostName) {
     AuthenticationInfo auth = new AuthenticationInfo();
     Date now = new Date();
     Date exp = DateUtil.offsetHour(now, tokenValidHour);
@@ -83,6 +83,7 @@ public class AuthenticationService {
     auth.setRole(role);
     auth.setUserName(name);
     auth.setUserId(id);
+    auth.setHostName(hostName);
     return new Token(jwtTokenService.generateToken(auth), exp.getTime());
   }
 }
