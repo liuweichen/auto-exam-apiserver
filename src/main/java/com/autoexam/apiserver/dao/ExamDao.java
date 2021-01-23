@@ -31,4 +31,7 @@ public interface ExamDao extends JpaRepository<Exam, Long> {
 
   @Query("select count(*) from Exam t where t.courseId = :courseId")
   Integer getCountByCourseId(@Param("courseId") Long courseId);
+
+  @Query("select count(*) from Exam as ex join Course as co on ex.courseId = co.id where co.teacherId = :teacherId")
+  Long getCountByTeacherId(@Param("teacherId") Long teacherId);
 }
