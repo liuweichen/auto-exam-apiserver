@@ -25,4 +25,6 @@ public class AuthenticationInfo {
   private Long userId;
   @ApiModelProperty("域名地址")
   private String hostName;
+  @ApiModelProperty("用户简介")
+  private String description;
 }

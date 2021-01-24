@@ -1,5 +1,7 @@
 package com.autoexam.apiserver.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.date.DateUtil;
 import com.autoexam.apiserver.beans.Admin;
 import com.autoexam.apiserver.beans.Student;
@@ -8,7 +10,9 @@ import com.autoexam.apiserver.dao.AdminDao;
 import com.autoexam.apiserver.dao.StudentDao;
 import com.autoexam.apiserver.dao.TeacherDao;
 import com.autoexam.apiserver.exception.AuthenticationException;
+import com.autoexam.apiserver.exception.BadRequestException;
 import com.autoexam.apiserver.model.AuthenticationInfo;
+import com.autoexam.apiserver.model.request.UpdateTeacher;
 import com.autoexam.apiserver.model.response.Token;
 import com.autoexam.apiserver.service.common.JwtTokenService;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +48,7 @@ public class AuthenticationService {
       log.info("password error for admin: {}", admin.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId(), "admin", t.getHostName());
+      return getToken(t.getName(), t.getId(), "admin", t.getHostName(), t.getDescription());
     }
   }
 
@@ -54,7 +58,25 @@ public class AuthenticationService {
       log.info("password error for teacher: {}", teacher.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId(), "teacher", adminDao.getOne(t.getAdminId()).getHostName());
+      return getToken(t.getName(), t.getId(), "teacher", adminDao.getOne(t.getAdminId()).getHostName(), t.getDescription());
+    }
+  }
+
+  public void updateTeacher(UpdateTeacher teacher, Long teacherId) {
+    Teacher t = teacherDao.getOneByName(teacher.getName()).orElseThrow(() -> new AuthenticationException("用户不存在"));
+    if (!teacherId.equals(t.getId())) {
+      throw new BadRequestException("用户名与token不一致");
+    }
+    if (!encoder.matches(teacher.getPassword(), t.getPassword())) {
+      log.info("password error for teacher: {}", teacher.getName());
+      throw new BadRequestException("密码错误");
+    } else {
+      teacher.setPassword(encoder.encode(teacher.getNewPassword()));
+      BeanUtil.copyProperties(
+        teacher,
+        t,
+        CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true).ignoreCase());
+      teacherDao.save(t);
     }
   }
 
@@ -64,16 +86,16 @@ public class AuthenticationService {
       log.info("password error for student: {}", student.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId(), "student", null);
+      return getToken(t.getName(), t.getId(), "student", null, t.getDescription());
     }
   }
 
   public Token refreshToken(String token) {
     AuthenticationInfo auth = jwtTokenService.verifyToken(token, tolerateSecond);
-    return getToken(auth.getUserName(), auth.getUserId(), auth.getRole(), auth.getHostName());
+    return getToken(auth.getUserName(), auth.getUserId(), auth.getRole(), auth.getHostName(), auth.getDescription());
   }
 
-  private Token getToken(String name, long id, String role, String hostName) {
+  private Token getToken(String name, long id, String role, String hostName, String description) {
     AuthenticationInfo auth = new AuthenticationInfo();
     Date now = new Date();
     Date exp = DateUtil.offsetHour(now, tokenValidHour);
@@ -84,6 +106,7 @@ public class AuthenticationService {
     auth.setUserName(name);
     auth.setUserId(id);
     auth.setHostName(hostName);
+    auth.setDescription(description);
     return new Token(jwtTokenService.generateToken(auth), exp.getTime());
   }
 }
