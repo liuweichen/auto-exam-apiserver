@@ -1,7 +1,7 @@
 package com.autoexam.apiserver.dao;
 
 import com.autoexam.apiserver.beans.Course;
-import com.autoexam.apiserver.model.response.TeacherOverview;
+import com.autoexam.apiserver.model.response.Overview;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -37,9 +37,9 @@ public interface CourseDao extends JpaRepository<Course, Long> {
   @Query("select count(*) from Course co join Chapter ch on co.id = ch.courseId join Question qu on ch.id = qu.chapterId where co.teacherId = :teacherId and qu.id in :idList")
   Long getByTeacherIdAndQuestionIdList(@Param("teacherId") Long teacherId, @Param("idList") List<Long> idList);
 
-  @Query("select new com.autoexam.apiserver.model.response.TeacherOverview(count(distinct co.id), count(distinct ch.id), count(qu.id)) " +
-    "from Course co join Chapter ch on co.id = ch.courseId join Question qu on ch.id = qu.chapterId " +
-    "where co.teacherId = :teacherId")
-  TeacherOverview getTeacherOverview(@Param("teacherId") Long teacherId);
-
+  @Query("select new com.autoexam.apiserver.model.response.Overview(" +
+    "count(distinct te.id), count(distinct co.id), count(distinct ch.id), count(distinct qu.id), count(distinct ex.id)) " +
+    "from Teacher te left join Course co on te.id = co.teacherId left join Chapter ch on co.id = ch.courseId left join Question qu on ch.id = qu.chapterId left join Exam ex on co.id = ex.courseId " +
+    "where :teacherId is null or te.id = :teacherId")
+  Overview getOverview(@Param("teacherId") Long teacherId);
 }

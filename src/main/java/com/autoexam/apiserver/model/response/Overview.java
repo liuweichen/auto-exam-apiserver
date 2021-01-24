@@ -9,15 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TeacherOverview {
+public class Overview {
+  private Long teacherCount;
   private Long courseCount;
   private Long chapterCount;
   private Long questionCount;
   private Long examCount;
-
-  public TeacherOverview(Long courseCount, Long chapterCount, Long questionCount) {
-    this.courseCount = courseCount;
-    this.chapterCount = chapterCount;
-    this.questionCount = questionCount;
-  }
 }

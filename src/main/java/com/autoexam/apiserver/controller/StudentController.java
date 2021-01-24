@@ -2,6 +2,7 @@ package com.autoexam.apiserver.controller;
 
 import com.autoexam.apiserver.beans.*;
 import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
+import com.autoexam.apiserver.model.response.Overview;
 import com.autoexam.apiserver.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,13 @@ public class StudentController extends ExceptionHandlerController {
   private QuestionService questionService;
   @Autowired
   private ExamService examService;
+  @Autowired
+  private OverviewService overviewService;
+
+  @GetMapping("/students/{student_id}/overview")
+  public Overview getOverview(@PathVariable("student_id") Long student_id) {
+    return overviewService.getOverview(null);
+  }
 
   @GetMapping("/students/{student_id}/teachers")
   public List<Teacher> getTeachers() {

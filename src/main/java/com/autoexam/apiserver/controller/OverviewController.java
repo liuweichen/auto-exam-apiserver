@@ -1,7 +1,7 @@
 package com.autoexam.apiserver.controller;
 
 import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
-import com.autoexam.apiserver.model.response.TeacherOverview;
+import com.autoexam.apiserver.model.response.Overview;
 import com.autoexam.apiserver.service.OverviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ public class OverviewController extends ExceptionHandlerController {
   private OverviewService service;
 
   @GetMapping("/teachers/{teacher_id}/overview")
-  public TeacherOverview getCourses(@PathVariable("teacher_id") Long teacherId) {
+  public Overview getOverview(@PathVariable("teacher_id") Long teacherId) {
     return service.getOverview(teacherId);
   }
 }
