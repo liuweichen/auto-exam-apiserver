@@ -86,7 +86,8 @@ public class AuthenticationService {
       log.info("password error for student: {}", student.getName());
       throw new AuthenticationException("密码错误");
     } else {
-      return getToken(t.getName(), t.getId(), "student", null, t.getDescription());
+      String hostName = adminDao.findAll().get(0).getHostName();
+      return getToken(t.getName(), t.getId(), "student", hostName, t.getDescription());
     }
   }
 
