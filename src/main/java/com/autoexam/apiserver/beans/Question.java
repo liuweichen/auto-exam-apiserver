@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
@@ -47,5 +48,6 @@ public class Question extends AuditInfo {
 
   @Transient
   @PostNotNull
+  @Size(min = 2, max = 10, message = "试题最少有两个选项，最多10个")
   private List<Answer> answerList;
 }

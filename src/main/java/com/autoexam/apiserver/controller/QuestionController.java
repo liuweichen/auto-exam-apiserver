@@ -3,6 +3,7 @@ package com.autoexam.apiserver.controller;
 import com.autoexam.apiserver.annotation.log.TraceLog;
 import com.autoexam.apiserver.beans.Question;
 import com.autoexam.apiserver.controller.base.ExceptionHandlerController;
+import com.autoexam.apiserver.exception.BadRequestException;
 import com.autoexam.apiserver.model.response.IDJson;
 import com.autoexam.apiserver.service.QuestionService;
 import com.autoexam.apiserver.service.privilege.TeacherPrivilegeService;
@@ -30,6 +31,7 @@ public class QuestionController extends ExceptionHandlerController {
   public IDJson createQuestion(
     @PathVariable("teacher_id") Long teacherId,
     @Valid @RequestBody Question question) {
+    checkQuestion(question);
     privilegeService.checkTeacherHasChapter(teacherId, question.getChapterId());
     return service.save(question);
   }
@@ -40,12 +42,22 @@ public class QuestionController extends ExceptionHandlerController {
     @PathVariable("teacher_id") Long teacherId,
     @PathVariable("question_id") Long questionId,
     @Valid @RequestBody Question question) {
+    checkQuestion(question);
     privilegeService.checkTeacherHasQuestion(teacherId, questionId);
     if (!StringUtils.isEmpty(question.getChapterId())) {
       privilegeService.checkTeacherHasChapter(teacherId, question.getChapterId());
     }
     question.setId(questionId);
     service.update(teacherId, question);
+  }
+
+  private void checkQuestion(Question question) {
+    long selectCount = question.getAnswerList().stream().filter(a -> a.getIsSelected()).count();
+    if (question.getType() == 1 && selectCount != 1) {
+      throw new BadRequestException("单选试题有且只有一个选择的选项");
+    } else if (question.getType() == 2 && selectCount < 2) {
+      throw new BadRequestException("多选试题最少有两个选择的选项");
+    }
   }
 
   @TraceLog(clazz = "QuestionController", method = "deleteQuestion")
